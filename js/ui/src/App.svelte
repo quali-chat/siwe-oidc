@@ -16,7 +16,7 @@
 	export let state: string;
 	export let oidc_nonce: string;
 	export let client_id: string;
-	const projectId: string = '1';
+	const projectId: string = process.env.PROJECT_ID;
 
 	$: status = 'Not Logged In';
 
