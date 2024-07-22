@@ -100,7 +100,7 @@ module.exports = {
 		new MiniCssExtractPlugin({
 			filename: '[name].css'
 		}),
-		new webpack.EnvironmentPlugin(prod ? ['PROJECT_ID'] : []),
+		new webpack.EnvironmentPlugin(prod ? ['PROJECT_ID', 'NETWORK_ID'] : []),
 	],
 	devtool: prod ? false : 'source-map',
 	devServer: {

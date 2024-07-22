@@ -10,7 +10,10 @@ jobs:
   buildx:
     name: Docker Buildx
     runs-on: ubuntu-latest
-    environment: dockerhub
+    strategy:
+      matrix:
+        environment: [staging, production]
+    environment: ${{ matrix.environment }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -38,8 +41,8 @@ jobs:
             qualichat/oidc
           tags: |
             type=ref,enable=true,event=branch
-            type=ref,enable=true,event=tag
-            type=raw,enable=true,value={{branch}},event=workflow_dispatch
+            type=ref,enable=true,event=tag,suffix=-${{ matrix.environment }}
+            type=raw,enable=true,value={{branch}},suffix=-${{ matrix.environment }},event=workflow_dispatch
           flavor: |
             latest=${{ contains(github.ref_name, '-rc.') && 'false' || 'auto' }}
 
@@ -53,3 +56,4 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             PROJECT_ID=${{ secrets.PROJECT_ID }}
+            NETWORK_ID=${{ secrets.NETWORK_ID }}

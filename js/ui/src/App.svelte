@@ -3,7 +3,7 @@
 
 	import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi';
 
-	import { sepolia } from '@wagmi/core/chains';
+	import { mainnet, sepolia } from '@wagmi/core/chains';
 	import { getAccount, signMessage, reconnect, getConnections } from '@wagmi/core';
 	import { SiweMessage } from 'siwe';
 	import Cookies from 'js-cookie';
@@ -17,10 +17,12 @@
 	export let oidc_nonce: string;
 	export let client_id: string;
 	const projectId: string = process.env.PROJECT_ID;
+	// 11_155_111 is the network id for sepolia, 1 is the network id for mainnet
+	const networkId: any = process.env.NETWORK_ID || 11_155_111;
 
 	$: status = 'Not Logged In';
 
-	const chains = [sepolia];
+	const chains = [mainnet, sepolia].filter((chain) => `${chain.id}` === `${networkId}`);
 
 	const config = defaultWagmiConfig({
 		chains,
@@ -30,7 +32,7 @@
 	});
 
 	const web3modal = createWeb3Modal({
-		defaultChain: sepolia,
+		defaultChain: chains[0],
 		wagmiConfig: config,
 		projectId,
 		themeMode: 'dark',
