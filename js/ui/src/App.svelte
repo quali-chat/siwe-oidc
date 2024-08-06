@@ -134,8 +134,8 @@
 			Sign-In with Ethereum
 		</button>
 		<div class="self-center mt-auto text-center text-xs">
-			By using this service you agree to the <a href="/legal/terms-of-use.pdf">Terms of Use</a> and
-			<a href="/legal/privacy-policy.pdf">Privacy Policy</a>.
+			By using this service you agree to the <a href="https://quali.chat/terms/">Terms of Use</a> and
+			<a href="https://quali.chat/privacy/">Privacy Policy</a>.
 		</div>
 
 		{#if client_metadata.client_uri}
