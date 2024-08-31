@@ -107,40 +107,48 @@
 </script>
 
 <div
-	class="bg-no-repeat bg-cover bg-center bg-swe-landing font-nunito bg-black flex-grow w-full h-screen flex flex-col items-center"
+	class="bg-no-repeat bg-cover bg-center font-nunito flex-grow w-full h-screen flex flex-col items-center md:bg-[url('/img/background.svg')] md:bg-cover md:bg-center md:bg-no-repeat"
 >
-	<div class="p-8 flex justify-center"><img src="img/logo.png" alt="Quali chat logo" class="logo" /></div>
-	<div class="w-96 text-center bg-black rounded-20 text-white flex flex-col px-12 py-6">
-		<!-- 		{#if client_metadata.logo_uri}
-			<div class="flex justify-evenly items-stretch">
-				<img height="72" width="72" class="self-center mb-8" src="img/modal_icon.png" alt="Ethereum logo" />
-				<img height="72" width="72" class="self-center mb-8" src={client_metadata.logo_uri} alt="Client logo" />
-			</div>
-		{:else}
- -->
-		<img class="self-center mb-8 ethereum-image" src="img/ethereum.png" alt="Ethereum" />
-		<!-- 	{/if} -->
-		<h5 style="color: #FCA780">WELCOME!</h5>
-		<!-- 		<span class="text-xs">
-			Sign-In with Ethereum to continue to {client_metadata.client_name ? client_metadata.client_name : domain}
-		</span> -->
-
-		<button
-			class="h-10 rounded-20 bg-white text-black justify-evenly flex items-center mt-8 mb-8"
-			on:click={() => {
-				web3modal.open();
-			}}
+	<header class="flex flex-col items-center md:flex-row w-full">
+		<aside class="pl-6 pt-6 pr-6 pb-2 flex">
+			<img src="img/quali.chat-desktop-logo.svg" alt="Quali chat logo" class="icon self-center hidden sm:block" />
+			<img src="img/quali.chat-mobile-logo.svg" alt="Quali chat logo" class="icon self-center block sm:hidden" />
+		</aside>
+	</header>
+	<div class="h-full flex items-center justify-center">
+		<div
+			class="text-center bg-transparent text-white flex flex-col px-12 py-6 w-[811px] max-w-[900px] h-[596px] flex-shrink-0 md:border border-[rgba(255,255,255,0.5)] md:bg-[#08090B] rounded-none"
 		>
-			Sign-In with Ethereum
-		</button>
-		<div class="self-center mt-auto text-center text-xs">
-			By using this service you agree to the <a href="https://quali.chat/terms/">Terms of Use</a> and
-			<a href="https://quali.chat/privacy/">Privacy Policy</a>.
+			<!--   {#if client_metadata.logo_uri}
+		<div class="flex justify-evenly items-stretch">
+		  <img height="72" width="72" class="self-center mb-8" src="img/modal_icon.png" alt="Ethereum logo" />
+		  <img height="72" width="72" class="self-center mb-8" src={client_metadata.logo_uri} alt="Client logo" />
 		</div>
-
-		{#if client_metadata.client_uri}
-			<span class="text-xs mt-4">Request linked to {client_metadata.client_uri}</span>
-		{/if}
+		{:else}
+		-->
+			<img class="self-center mb-8 ethereum-image" src="img/ethereum.png" alt="Ethereum" />
+			<!--   {/if} -->
+			<h5 style="color: #FCA780">WELCOME!</h5>
+			<!--   <span class="text-xs">
+		Sign-In with Ethereum to continue to {client_metadata.client_name ? client_metadata.client_name : domain}
+	  </span> -->
+			<button
+				class="h-10 w-64 rounded-20 bg-white text-black justify-evenly flex items-center self-center mt-8 mb-8"
+				on:click={() => {
+					web3modal.open();
+				}}
+			>
+				Sign-In with Ethereum
+			</button>
+			<div class="w-56 self-center text-center text-[14px] font-sans font-normal leading-normal">
+				By using this service you agree to the
+				<a href="https://quali.chat/terms/" class="text-[#FCA780] !text-[#FCA780]">Terms of Use</a> and
+				<a href="https://quali.chat/privacy/" class="text-[#FCA780] !text-[#FCA780]">Privacy Policy</a>.
+			</div>
+			{#if client_metadata.client_uri}
+				<span class="text-xs mt-4">Request linked to {client_metadata.client_uri}</span>
+			{/if}
+		</div>
 	</div>
 </div>
 
@@ -156,6 +164,7 @@
 	.has-tooltip:hover .tooltip {
 		@apply visible z-50;
 	}
+
 	html,
 	body {
 		position: relative;
@@ -164,7 +173,7 @@
 		margin: 0px;
 		padding: 0px;
 		font-size: 18px;
-		background: #ecf2fe;
+		background: #000;
 		display: flex;
 		flex-direction: column;
 		overflow-x: hidden;
@@ -239,12 +248,9 @@
 		word-wrap: break-word; /* Internet Explorer 5.5+ */
 	}
 
-	.logo {
-		width: 72px;
-	}
-
 	.ethereum-image {
 		max-width: 270px;
+		background: radial-gradient(50% 50% at 50% 50%, rgba(43, 43, 43, 0.00) 75.64%, #000 95.88%)
 	}
 
 	.web3modal-modal-lightbox {
@@ -288,6 +294,7 @@
 		border-radius: 8px;
 		background-color: #888;
 	}
+
 	::-webkit-scrollbar {
 		height: 6px;
 		border-radius: 8px;
