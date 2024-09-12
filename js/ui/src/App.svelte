@@ -107,7 +107,7 @@
 </script>
 
 <div
-	class="bg-no-repeat bg-cover bg-center font-nunito flex-grow w-full h-screen flex flex-col items-center md:bg-[url('/img/background.svg')] md:bg-cover md:bg-center md:bg-no-repeat"
+	class="bg-no-repeat bg-cover bg-center font-nunito flex-grow w-full h-screen flex flex-col items-center eclipse-background md:bg-cover md:bg-center md:bg-no-repeat"
 >
 	<header class="flex flex-col items-center md:flex-row w-full">
 		<aside class="pl-6 pt-6 pr-6 pb-2 flex">
@@ -246,6 +246,18 @@
 		white-space: -pre-wrap; /* Opera 4-6 */
 		white-space: -o-pre-wrap; /* Opera 7 */
 		word-wrap: break-word; /* Internet Explorer 5.5+ */
+	}
+
+	/* TODO: remove inline svg and import file */
+	@layer utilities {
+		@screen md {
+			.eclipse-background{
+				background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="1461" height="1200" viewBox="0 0 1461 1200" fill="none"><circle cx="961" cy="431" r="500" fill="url(%23paint0_radial_1254_2)"/><circle cx="500" cy="796" r="500" fill="url(%23paint1_radial_1254_2)"/><defs><radialGradient id="paint0_radial_1254_2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(961 431) rotate(90) scale(500)"><stop stop-color="%239BAFF7"/><stop offset="1" stop-color="%23737373" stop-opacity="0"/></radialGradient><radialGradient id="paint1_radial_1254_2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(500 796) rotate(90) scale(500)"><stop stop-color="%23FCA780"/><stop offset="1" stop-color="%23737373" stop-opacity="0"/></radialGradient></defs></svg>');
+				background-repeat: no-repeat;
+				background-size: cover;
+				background-position: center;
+			}
+		}
 	}
 
 	.ethereum-image {
