@@ -18,7 +18,7 @@
 	export let client_id: string;
 	const projectId: string = process.env.PROJECT_ID;
 	// 11_155_111 is the network id for sepolia, 1 is the network id for mainnet
-	const networkId: any = process.env.NETWORK_ID || 11_155_111;
+	const networkId: any = process.env.NETWORK_ID || 11155111;
 
 	$: status = 'Not Logged In';
 
