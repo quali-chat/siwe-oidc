@@ -9,6 +9,8 @@ Cloudflare Worker. They use the same code base and are selected at compile time
 > The front-end depends on WalletConnect, meaning you will need to create a
 > project with them and have the environment variable `VITE_PROJECT_ID` set when you
 > build the front-end.
+> 
+> This is achieved by copying the .env.example to .env and filling it out for the docker build.
 
 ### Cloudflare Worker
 
