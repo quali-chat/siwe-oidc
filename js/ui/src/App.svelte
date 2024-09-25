@@ -142,7 +142,7 @@
 	</header>
 	<div class="h-full flex items-center justify-center">
 		<div
-			class="text-center bg-transparent text-white flex flex-col px-12 py-6 w-[811px] max-w-[900px] h-[596px] flex-shrink-0 md:border border-[rgba(255,255,255,0.5)] md:bg-[#08090B] rounded-none"
+			class="text-center bg-transparent text-white flex flex-col px-12 py-6 md:w-[811px] max-w-[900px] h-[596px] flex-shrink-0 md:border border-[rgba(255,255,255,0.5)] md:bg-[#08090B] rounded-none"
 		>
 			<!--   {#if client_metadata.logo_uri}
 		<div class="flex justify-evenly items-stretch">
