@@ -12,6 +12,7 @@
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^3.1.1",
     "@tsconfig/svelte": "^5.0.4",
+    "@types/js-cookie": "3.0.6",
     "autoprefixer": "^10.4.20",
     "cssnano": "^7.0.6",
     "postcss": "^8.4.47",
@@ -23,10 +24,10 @@
     "vite": "^5.4.1"
   },
   "dependencies": {
-    "@reown/appkit-adapter-wagmi": "^1.0.1",
+    "@reown/appkit-adapter-wagmi": "^1.0.4",
     "js-cookie": "^3.0.5",
     "siwe": "^2.3.2",
-    "viem": "^2.21.9",
-    "wagmi": "^2.12.12"
+    "viem": "^2.21.14",
+    "wagmi": "^2.12.14"
   }
 }
