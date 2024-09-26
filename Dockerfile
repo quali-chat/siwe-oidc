@@ -14,6 +14,10 @@ COPY --from=dep_planner /siwe-oidc/recipe.json recipe.json
 RUN cargo chef cook --release --recipe-path recipe.json
 
 FROM node:18-alpine as node_builder
+ARG VITE_PROJECT_ID
+ENV VITE_PROJECT_ID=$VITE_PROJECT_ID
+ARG VITE_PROJECT_ID
+ENV VITE_PROJECT_ID=$VITE_PROJECT_ID
 ADD --chown=node:node ./static /siwe-oidc/static
 ADD --chown=node:node ./js/ui /siwe-oidc/js/ui
 WORKDIR /siwe-oidc/js/ui
