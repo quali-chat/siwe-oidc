@@ -3,7 +3,7 @@
 	import { createAppKit } from '@reown/appkit';
 	import { mainnet, sepolia } from '@reown/appkit/networks';
 	import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
-	import { getAccount } from '@wagmi/core';
+	import { getAccount, reconnect } from '@wagmi/core';
 	import { SiweMessage } from 'siwe';
 	import { signMessage } from 'wagmi/actions';
 	import Cookies from 'js-cookie';
@@ -65,6 +65,8 @@
 			'--w3m-accent': '#9baff7',
 		},
 	});
+	
+	reconnect(wagmiAdapter.wagmiConfig);
 
 	let client_metadata = {};
 	onMount(async () => {
