@@ -277,9 +277,9 @@ pub async fn main() {
     };
 
     let app = Router::new()
-        .nest(
-            "/build",
-            get_service(ServeDir::new("./static/build")).handle_error(
+         .nest(
+            "/assets",
+            get_service(ServeDir::new("./static/assets")).handle_error(
                 |error: std::io::Error| async move {
                     (
                         StatusCode::INTERNAL_SERVER_ERROR,

@@ -14,13 +14,10 @@ COPY --from=dep_planner /siwe-oidc/recipe.json recipe.json
 RUN cargo chef cook --release --recipe-path recipe.json
 
 FROM node:18-alpine as node_builder
-ARG PROJECT_ID
-ENV PROJECT_ID=$PROJECT_ID
-ARG NETWORK_ID
-ENV NETWORK_ID=$NETWORK_ID
 ADD --chown=node:node ./static /siwe-oidc/static
 ADD --chown=node:node ./js/ui /siwe-oidc/js/ui
 WORKDIR /siwe-oidc/js/ui
+COPY js/ui/.env ./.env
 RUN npm install
 RUN npm run build
 

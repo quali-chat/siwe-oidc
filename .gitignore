@@ -1,5 +1,5 @@
 **/target
-/static/build
+/static/assets
 **/wrangler.toml
 **/node_module
 **/dist

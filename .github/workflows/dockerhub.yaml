@@ -33,6 +33,11 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Create .env file
+        run: |
+          echo "VITE_PROJECT_ID=${{ secrets.PROJECT_ID }}" > js/ui/.env
+          echo "VITE_NETWORK_ID=${{ secrets.NETWORK_ID }}" >> js/ui/.env
+
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
@@ -54,6 +59,3 @@ jobs:
           platforms: linux/amd64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            PROJECT_ID=${{ secrets.PROJECT_ID }}
-            NETWORK_ID=${{ secrets.NETWORK_ID }}

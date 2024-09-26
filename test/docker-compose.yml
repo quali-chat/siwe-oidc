@@ -3,8 +3,6 @@ services:
   siwe-oidc:
     build:
       context: ..
-      args:
-        PROJECT_ID: ""
     ports:
       - "8000:8000"
     environment:

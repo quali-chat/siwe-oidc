@@ -1,45 +1,72 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-
-	import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi';
-
-	import { mainnet, sepolia } from '@wagmi/core/chains';
-	import { getAccount, signMessage, reconnect, getConnections } from '@wagmi/core';
+	import { createAppKit } from '@reown/appkit';
+	import { mainnet, sepolia } from '@reown/appkit/networks';
+	import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
+	import { getAccount, reconnect } from '@wagmi/core';
 	import { SiweMessage } from 'siwe';
+	import { signMessage } from 'wagmi/actions';
 	import Cookies from 'js-cookie';
 
 	// TODO: REMOVE DEFAULTS:
 	// main.ts will parse the params from the server
 	/* 	export let domain: string; */
-	export let nonce: string;
-	export let redirect: string;
-	export let state: string;
-	export let oidc_nonce: string;
-	export let client_id: string;
-	const projectId: string = process.env.PROJECT_ID;
+	export let nonce: string | null;
+	export let redirect: string | null;
+	export let state: string | null;
+	export let oidc_nonce: string | null;
+	export let client_id: string | null;
+
+	// Get a project ID at https://cloud.reown.com
+	const projectId = import.meta.env.VITE_PROJECT_ID;
 	// 11_155_111 is the network id for sepolia, 1 is the network id for mainnet
-	const networkId: any = process.env.NETWORK_ID || 11155111;
+	const networkId: any = import.meta.env.VITE_NETWORK_ID || 11155111;
 
-	$: status = 'Not Logged In';
+	const networks = [mainnet, sepolia].filter((chain) => `${chain.chainId}` === `${networkId}`);
 
-	const chains = [mainnet, sepolia].filter((chain) => `${chain.id}` === `${networkId}`);
-
-	const config = defaultWagmiConfig({
-		chains,
+	const wagmiAdapter = new WagmiAdapter({
 		projectId,
+		networks,
+	});
+
+	const metadata = {
+		name: 'quali.chat',
+		description: 'all your token-gated chats in one quality dapp',
+		url: import.meta.env.BASE_URL,
+		icons: ['https://avatars.githubusercontent.com/u/167457066?s=200&v=4'],
+	};
+
+	const web3modal = createAppKit({
+		adapters: [wagmiAdapter],
+		networks: [mainnet, sepolia],
+		metadata,
+		projectId,
+		features: {
+			analytics: false,
+			email: false,
+			socials: false,
+		},
+		allowUnsupportedChain: true,
 		enableCoinbase: false,
-		enableInjected: false,
-	});
-
-	const web3modal = createWeb3Modal({
-		defaultChain: chains[0],
-		wagmiConfig: config,
-		projectId,
+		featuredWalletIds: [
+			// Metamask
+			'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96',
+			// Trust Wallet
+			'4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0',
+			// Rainbow
+			'1ae92b26df02f0abca6304df07debccd18262fdf5fe82daa81593582dac9a369',
+		],
+		excludeWalletIds: [
+			// Coinbase Wallet
+			'fd20dc426fb37566d803205b19bbc1d4096b248ac04548e3cfb6b3a38bd033aa'
+		],
 		themeMode: 'dark',
-		featuredWalletIds: [],
+		themeVariables: {
+			'--w3m-accent': '#9baff7',
+		},
 	});
-
-	reconnect(config);
+	
+	reconnect(wagmiAdapter.wagmiConfig);
 
 	let client_metadata = {};
 	onMount(async () => {
@@ -51,7 +78,7 @@
 	});
 
 	web3modal.subscribeState(async (newState) => {
-		const account = getAccount(config);
+		const account = getAccount(wagmiAdapter.wagmiConfig);
 
 		if (account.isConnected) {
 			try {
@@ -67,15 +94,15 @@
 					uri: window.location.origin,
 					version: '1',
 					statement: `You are signing-in to ${window.location.host}.`,
-					nonce,
-					resources: [redirect],
+					nonce: nonce as any,
+					resources: [redirect as any],
 				});
 
 				const preparedMessage = msgToSign.prepareMessage();
 
 				await new Promise((resolve) => setTimeout(resolve, 1000));
 
-				const signature = await signMessage(config, {
+				const signature = await signMessage(wagmiAdapter.wagmiConfig, {
 					message: preparedMessage,
 				});
 
@@ -89,8 +116,8 @@
 				});
 
 				window.location.replace(
-					`/sign_in?redirect_uri=${encodeURI(redirect)}&state=${encodeURI(state)}&client_id=${encodeURI(
-						client_id,
+					`/sign_in?redirect_uri=${encodeURI(redirect as any)}&state=${encodeURI(state as any)}&client_id=${encodeURI(
+						client_id as any,
 					)}${encodeURI(oidc_nonce_param)}`,
 				);
 				return;
@@ -117,7 +144,7 @@
 	</header>
 	<div class="h-full flex items-center justify-center">
 		<div
-			class="text-center bg-transparent text-white flex flex-col px-12 py-6 w-[811px] max-w-[900px] h-[596px] flex-shrink-0 md:border border-[rgba(255,255,255,0.5)] md:bg-[#08090B] rounded-none"
+			class="text-center bg-transparent text-white flex flex-col px-12 py-6 md:w-[811px] max-w-[900px] h-[596px] flex-shrink-0 md:border border-[rgba(255,255,255,0.5)] md:bg-[#08090B] rounded-none"
 		>
 			<!--   {#if client_metadata.logo_uri}
 		<div class="flex justify-evenly items-stretch">
@@ -142,7 +169,8 @@
 			</button>
 			<div class="w-56 self-center text-center text-[14px] font-sans font-normal leading-normal">
 				By using this service you agree to the
-				<a href="https://quali.chat/terms/" class="text-[#FCA780] !text-[#FCA780]">Terms of Use</a> and
+				<a href="https://quali.chat/terms/" class="text-[#FCA780] !text-[#FCA780]">Terms of Use</a>
+				and
 				<a href="https://quali.chat/privacy/" class="text-[#FCA780] !text-[#FCA780]">Privacy Policy</a>.
 			</div>
 			{#if client_metadata.client_uri}
@@ -251,7 +279,7 @@
 	/* TODO: remove inline svg and import file */
 	@layer utilities {
 		@screen md {
-			.eclipse-background{
+			.eclipse-background {
 				background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="1461" height="1200" viewBox="0 0 1461 1200" fill="none"><circle cx="961" cy="431" r="500" fill="url(%23paint0_radial_1254_2)"/><circle cx="500" cy="796" r="500" fill="url(%23paint1_radial_1254_2)"/><defs><radialGradient id="paint0_radial_1254_2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(961 431) rotate(90) scale(500)"><stop stop-color="%239BAFF7"/><stop offset="1" stop-color="%23737373" stop-opacity="0"/></radialGradient><radialGradient id="paint1_radial_1254_2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(500 796) rotate(90) scale(500)"><stop stop-color="%23FCA780"/><stop offset="1" stop-color="%23737373" stop-opacity="0"/></radialGradient></defs></svg>');
 				background-repeat: no-repeat;
 				background-size: cover;
@@ -262,7 +290,7 @@
 
 	.ethereum-image {
 		max-width: 270px;
-		background: radial-gradient(50% 50% at 50% 50%, rgba(43, 43, 43, 0.00) 75.64%, #000 95.88%)
+		background: radial-gradient(50% 50% at 50% 50%, rgba(43, 43, 43, 0) 75.64%, #000 95.88%);
 	}
 
 	.web3modal-modal-lightbox {

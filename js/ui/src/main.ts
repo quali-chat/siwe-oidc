@@ -1,13 +1,12 @@
-import './global.css';
-
-import App from './App.svelte';
+import './global.css'
+import App from './App.svelte'
 
 const params = new URLSearchParams(window.location.search);
 
 const app = new App({
 	target: document.body,
 	props: {
-		domain: params.get('domain'),
+		// domain: params.get('domain'),
 		nonce: params.get('nonce'),
 		redirect: params.get('redirect_uri'),
 		state: params.get('state'),
