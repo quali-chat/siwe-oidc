@@ -58,15 +58,13 @@
 		],
 		excludeWalletIds: [
 			// Coinbase Wallet
-			'fd20dc426fb37566d803205b19bbc1d4096b248ac04548e3cfb6b3a38bd033aa'
+			'fd20dc426fb37566d803205b19bbc1d4096b248ac04548e3cfb6b3a38bd033aa',
 		],
 		themeMode: 'dark',
 		themeVariables: {
 			'--w3m-accent': '#9baff7',
 		},
 	});
-	
-	reconnect(wagmiAdapter.wagmiConfig);
 
 	let client_metadata = {};
 	onMount(async () => {
@@ -77,53 +75,60 @@
 		}
 	});
 
-	web3modal.subscribeState(async (newState) => {
+	const signLoginMessage = async () => {
 		const account = getAccount(wagmiAdapter.wagmiConfig);
 
-		if (account.isConnected) {
-			try {
-				const expirationTime = new Date(
-					new Date().getTime() + 2 * 24 * 60 * 60 * 1000, // 48h
-				);
+		try {
+			const expirationTime = new Date(
+				new Date().getTime() + 2 * 24 * 60 * 60 * 1000, // 48h
+			);
 
-				const msgToSign = new SiweMessage({
-					domain: window.location.host,
-					address: account.address,
-					chainId: account.chainId,
-					expirationTime: expirationTime.toISOString(),
-					uri: window.location.origin,
-					version: '1',
-					statement: `You are signing-in to ${window.location.host}.`,
-					nonce: nonce as any,
-					resources: [redirect as any],
-				});
+			const msgToSign = new SiweMessage({
+				domain: window.location.host,
+				address: account.address,
+				chainId: account.chainId,
+				expirationTime: expirationTime.toISOString(),
+				uri: window.location.origin,
+				version: '1',
+				statement: `You are signing-in to ${window.location.host}.`,
+				nonce: nonce as any,
+				resources: [redirect as any],
+			});
 
-				const preparedMessage = msgToSign.prepareMessage();
+			const preparedMessage = msgToSign.prepareMessage();
 
-				await new Promise((resolve) => setTimeout(resolve, 1000));
+			await new Promise((resolve) => setTimeout(resolve, 1000));
 
-				const signature = await signMessage(wagmiAdapter.wagmiConfig, {
-					message: preparedMessage,
-				});
+			const signature = await signMessage(wagmiAdapter.wagmiConfig, {
+				message: preparedMessage,
+			});
 
-				const session = {
-					message: new SiweMessage(preparedMessage),
-					raw: msgToSign,
-					signature,
-				};
-				Cookies.set('siwe', JSON.stringify(session), {
-					expires: expirationTime,
-				});
+			const session = {
+				message: new SiweMessage(preparedMessage),
+				raw: msgToSign,
+				signature,
+			};
+			Cookies.set('siwe', JSON.stringify(session), {
+				expires: expirationTime,
+			});
 
-				window.location.replace(
-					`/sign_in?redirect_uri=${encodeURI(redirect as any)}&state=${encodeURI(state as any)}&client_id=${encodeURI(
-						client_id as any,
-					)}${encodeURI(oidc_nonce_param)}`,
-				);
-				return;
-			} catch (e) {
-				console.error(e);
-			}
+			console.log('aaaa');
+
+			window.location.replace(
+				`/sign_in?redirect_uri=${encodeURI(redirect as any)}&state=${encodeURI(state as any)}&client_id=${encodeURI(
+					client_id as any,
+				)}${encodeURI(oidc_nonce_param)}`,
+			);
+			return;
+		} catch (e) {
+			console.log('eeee');
+			console.error(e);
+		}
+	};
+
+	web3modal.subscribeEvents(async (event) => {
+		if (event.data.event === 'CONNECT_SUCCESS') {
+			signLoginMessage();
 		}
 	});
 
@@ -131,6 +136,20 @@
 	if (oidc_nonce != null && oidc_nonce != '') {
 		oidc_nonce_param = `&oidc_nonce=${oidc_nonce}`;
 	}
+
+	const openModal = async () => {
+		await reconnect(wagmiAdapter.wagmiConfig);
+
+		web3modal.open();
+
+		const account = getAccount(wagmiAdapter.wagmiConfig);
+
+		if (account.isConnected) {
+			signLoginMessage();
+		}
+	};
+
+	openModal();
 </script>
 
 <div
@@ -162,7 +181,7 @@
 			<button
 				class="h-10 w-64 rounded-20 bg-white text-black justify-evenly flex items-center self-center mt-8 mb-8"
 				on:click={() => {
-					web3modal.open();
+					openModal();
 				}}
 			>
 				Sign-In with Ethereum
