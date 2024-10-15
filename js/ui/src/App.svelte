@@ -72,6 +72,7 @@
 	onMount(async () => {
 		try {
 			client_metadata = fetch(`${window.location.origin}/client/${client_id}`).then((response) => response.json());
+			web3modal.open();
 		} catch (e) {
 			console.error(e);
 		}
