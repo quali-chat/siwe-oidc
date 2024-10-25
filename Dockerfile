@@ -18,6 +18,8 @@ ARG VITE_PROJECT_ID
 ENV VITE_PROJECT_ID=$VITE_PROJECT_ID
 ARG VITE_PROJECT_ID
 ENV VITE_PROJECT_ID=$VITE_PROJECT_ID
+# if you are on mac or the image doesn't include python then uncomment the following line
+# RUN apk add --no-cache python3 make g++
 ADD --chown=node:node ./static /siwe-oidc/static
 ADD --chown=node:node ./js/ui /siwe-oidc/js/ui
 WORKDIR /siwe-oidc/js/ui
@@ -32,6 +34,8 @@ COPY --from=dep_planner /siwe-oidc/ ./
 RUN cargo build --release
 
 FROM alpine
+# if you are on arm64 machines then use the following line
+# COPY --from=builder /siwe-oidc/target/aarch64-unknown-linux-musl/release/siwe-oidc /usr/local/bin/
 COPY --from=builder /siwe-oidc/target/x86_64-unknown-linux-musl/release/siwe-oidc /usr/local/bin/
 WORKDIR /siwe-oidc
 RUN mkdir -p ./static
