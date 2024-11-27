@@ -31,8 +31,8 @@
 
 	const metadata = {
 		name: 'quali.chat',
-		description: 'all your token-gated chats in one quality dapp',
-		url: import.meta.env.BASE_URL,
+		description: 'All your token-gated chats in one quality dApp',
+		url: window.location.origin,
 		icons: ['https://avatars.githubusercontent.com/u/167457066?s=200&v=4'],
 	};
 
