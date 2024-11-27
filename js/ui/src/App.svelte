@@ -17,6 +17,8 @@
 	export let oidc_nonce: string | null;
 	export let client_id: string | null;
 
+	let signature;
+
 	// Get a project ID at https://cloud.reown.com
 	const projectId = import.meta.env.VITE_PROJECT_ID;
 	// 11_155_111 is the network id for sepolia, 1 is the network id for mainnet
@@ -58,29 +60,21 @@
 		],
 		excludeWalletIds: [
 			// Coinbase Wallet
-			'fd20dc426fb37566d803205b19bbc1d4096b248ac04548e3cfb6b3a38bd033aa'
+			'fd20dc426fb37566d803205b19bbc1d4096b248ac04548e3cfb6b3a38bd033aa',
 		],
 		themeMode: 'dark',
 		themeVariables: {
 			'--w3m-accent': '#9baff7',
 		},
 	});
-	
+
 	reconnect(wagmiAdapter.wagmiConfig);
 
-	let client_metadata = {};
-	onMount(async () => {
-		try {
-			client_metadata = fetch(`${window.location.origin}/client/${client_id}`).then((response) => response.json());
-		} catch (e) {
-			console.error(e);
-		}
-	});
 
-	web3modal.subscribeState(async (newState) => {
+	const siwe = async () => {
 		const account = getAccount(wagmiAdapter.wagmiConfig);
 
-		if (account.isConnected) {
+		if (account.isConnected && !signature) {
 			try {
 				const expirationTime = new Date(
 					new Date().getTime() + 2 * 24 * 60 * 60 * 1000, // 48h
@@ -102,8 +96,9 @@
 
 				await new Promise((resolve) => setTimeout(resolve, 1000));
 
-				const signature = await signMessage(wagmiAdapter.wagmiConfig, {
+				signature = await signMessage(wagmiAdapter.wagmiConfig, {
 					message: preparedMessage,
+					account: account.address,
 				});
 
 				const session = {
@@ -125,6 +120,24 @@
 				console.error(e);
 			}
 		}
+	};
+
+	let client_metadata = {};
+	onMount(async () => {
+		try {
+			client_metadata = fetch(`${window.location.origin}/client/${client_id}`).then((response) => response.json());
+			// on page load, trigger wallet connect
+			web3modal.open();
+			// on page load, check if account is connected and signature doesn't exists then
+			// request signature
+			await siwe();
+		} catch (e) {
+			console.error(e);
+		}
+	});
+
+	web3modal.subscribeState(async (newState) => {
+		await siwe();
 	});
 
 	let oidc_nonce_param = '';
