@@ -24,7 +24,7 @@
 	// 11_155_111 is the network id for sepolia, 1 is the network id for mainnet
 	const networkId: any = import.meta.env.VITE_NETWORK_ID || 11155111;
 
-	const networks = [mainnet, sepolia].filter((chain) => `${chain.chainId}` === `${networkId}`);
+	const networks = [mainnet, sepolia].filter((chain) => `${chain.id}` === `${networkId}`);
 
 	const wagmiAdapter = new WagmiAdapter({
 		projectId,
