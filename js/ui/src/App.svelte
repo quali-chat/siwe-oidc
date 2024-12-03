@@ -1,14 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { createAppKit } from '@reown/appkit';
+	import { createAppKit, type Metadata } from '@reown/appkit';
 	import { mainnet, sepolia } from '@reown/appkit/networks';
 	import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
-	import { getAccount, reconnect } from '@wagmi/core';
+	import { getAccount, reconnect, signMessage } from '@wagmi/core';
 	import { SiweMessage } from 'siwe';
-	import { signMessage } from 'wagmi/actions';
 	import Cookies from 'js-cookie';
 
-	// TODO: REMOVE DEFAULTS:
 	// main.ts will parse the params from the server
 	/* 	export let domain: string; */
 	export let nonce: string | null;
@@ -22,21 +20,21 @@
 	// 11_155_111 is the network id for sepolia, 1 is the network id for mainnet
 	const networkId: any = import.meta.env.VITE_NETWORK_ID || 11155111;
 
-	const networks = [mainnet, sepolia].filter((chain) => `${chain.id}` === `${networkId}`);
+	const networks: any = [mainnet, sepolia].filter((chain) => `${chain.id}` === `${networkId}`);
 
 	const wagmiAdapter = new WagmiAdapter({
 		projectId,
 		networks,
 	});
 
-	const metadata = {
+	const metadata: Metadata = {
 		name: 'quali.chat',
 		description: 'All your token-gated chats in one quality dApp',
 		url: window.location.origin,
 		icons: ['https://avatars.githubusercontent.com/u/167457066?s=200&v=4'],
 	};
 
-	const web3modal = createAppKit({
+	const modal = createAppKit({
 		adapters: [wagmiAdapter],
 		networks,
 		metadata,
@@ -46,8 +44,6 @@
 			email: false,
 			socials: false,
 		},
-		allowUnsupportedChain: true,
-		enableCoinbase: false,
 		featuredWalletIds: [
 			// Metamask
 			'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96',
@@ -56,16 +52,15 @@
 			// Rainbow
 			'1ae92b26df02f0abca6304df07debccd18262fdf5fe82daa81593582dac9a369',
 		],
-		excludeWalletIds: [
-			// Coinbase Wallet
-			'fd20dc426fb37566d803205b19bbc1d4096b248ac04548e3cfb6b3a38bd033aa'
-		],
 		themeMode: 'dark',
 		themeVariables: {
 			'--w3m-accent': '#9baff7',
 		},
 	});
-	
+
+	// temporary fix, connectors are not synced properly
+	wagmiAdapter.syncConnectors(modal.options, modal);
+
 	reconnect(wagmiAdapter.wagmiConfig);
 
 	let client_metadata = {};
@@ -77,7 +72,7 @@
 		}
 	});
 
-	web3modal.subscribeState(async (newState) => {
+	modal.subscribeState(async (newState) => {
 		const account = getAccount(wagmiAdapter.wagmiConfig);
 
 		if (account.isConnected) {
@@ -144,7 +139,7 @@
 	</header>
 	<div class="h-full flex items-center justify-center">
 		<div
-			class="text-center bg-transparent text-white flex flex-col px-12 py-6 md:w-[811px] max-w-[900px] h-[596px] flex-shrink-0 md:border border-[rgba(255,255,255,0.5)] md:bg-[#08090B] rounded-none"
+			class="text-center bg-transparent text-white flex flex-col px-12 py-6 md:w-[811px] max-w-[900px] h-[596px] flex-shrink-0 md:border border-white md:bg-[#08090B] rounded-none"
 		>
 			<!--   {#if client_metadata.logo_uri}
 		<div class="flex justify-evenly items-stretch">
@@ -162,10 +157,10 @@
 			<button
 				class="h-10 w-64 rounded-20 bg-white text-black justify-evenly flex items-center self-center mt-8 mb-8"
 				on:click={() => {
-					web3modal.open();
+					modal.open();
 				}}
 			>
-				Sign-In with Ethereum
+				Sign-in with Ethereum
 			</button>
 			<div class="w-56 self-center text-center text-[14px] font-sans font-normal leading-normal">
 				By using this service you agree to the
@@ -184,14 +179,6 @@
 	@tailwind base;
 	@tailwind components;
 	@tailwind utilities;
-
-	.tooltip {
-		@apply invisible absolute;
-	}
-
-	.has-tooltip:hover .tooltip {
-		@apply visible z-50;
-	}
 
 	html,
 	body {
@@ -290,59 +277,5 @@
 
 	.ethereum-image {
 		max-width: 270px;
-		background: radial-gradient(50% 50% at 50% 50%, rgba(43, 43, 43, 0) 75.64%, #000 95.88%);
-	}
-
-	.web3modal-modal-lightbox {
-		z-index: 30 !important;
-	}
-
-	.walletconnect-modal__base {
-		background-color: #273137 !important;
-	}
-
-	.walletconnect-qrcode__text {
-		color: white !important;
-	}
-
-	.walletconnect-modal__mobile__toggle {
-		background: rgba(255, 255, 255, 0.1) !important;
-	}
-
-	.walletconnect-qrcode__image {
-		border: 24px solid white !important;
-		border-radius: 8px !important;
-	}
-
-	.walletconnect-modal__base__row:hover {
-		background: rgba(255, 255, 255, 0.1) !important;
-	}
-
-	.walletconnect-modal__mobile__toggle_selector {
-		background: rgba(255, 255, 255, 0.2) !important;
-	}
-
-	/**
-	Custom scrollbar settings
-	*/
-	::-webkit-scrollbar-track {
-		border-radius: 8px;
-		background-color: #ccc;
-	}
-
-	::-webkit-scrollbar-thumb {
-		border-radius: 8px;
-		background-color: #888;
-	}
-
-	::-webkit-scrollbar {
-		height: 6px;
-		border-radius: 8px;
-		width: 6px;
-		background-color: #ccc;
-	}
-
-	.grecaptcha-badge {
-		visibility: hidden;
 	}
 </style>
