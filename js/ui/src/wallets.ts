@@ -9,6 +9,8 @@ export const featuredWalletIds = [
 	'c03dfee351b6fcc421b4494ea33b9d4b92a984f87aa76d1663bb28705e95034a',
 	// Safepal
 	'0b415a746fb9ee99cce155c2ceca0c6f6061b1dbca2d722b3ba16381d0562150',
+	// Binance
+	'8a0ee50d1f22f6651afcae7eb4253e52a3310b90af5daef78a8c4929a9bb99d4'
 ];
 
 export const excludedRdns = [
