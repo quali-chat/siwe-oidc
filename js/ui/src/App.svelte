@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { createAppKit, type Metadata } from '@reown/appkit';
+	import { ApiController } from '@reown/appkit-core';
+	import { excludedRdns, featuredWalletIds } from './wallets';
 	import { mainnet, sepolia } from '@reown/appkit/networks';
 	import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 	import { getAccount, reconnect, signMessage } from '@wagmi/core';
@@ -45,28 +47,22 @@
 			socials: false,
 		},
 		enableCoinbase: false,
-		featuredWalletIds: [
-			// Metamask
-			'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96',
-			// Trust Wallet
-			'4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0',
-			// Rainbow
-			'1ae92b26df02f0abca6304df07debccd18262fdf5fe82daa81593582dac9a369',
-		],
-		excludeWalletIds: [
-			// Coinbase Wallet
-			'fd20dc426fb37566d803205b19bbc1d4096b248ac04548e3cfb6b3a38bd033aa'
-		],
+		allWallets: 'HIDE',
+		featuredWalletIds,
+		// excludeWalletIds,
 		themeMode: 'dark',
 		themeVariables: {
 			'--w3m-accent': '#9baff7',
 		},
 	});
 
-	// temporary fix, connectors are not synced properly
+	// temporary fix, connectors are not synced properly on appkit
 	wagmiAdapter.syncConnectors(modal.options, modal);
 
 	reconnect(wagmiAdapter.wagmiConfig);
+
+	// temporary fix, until excluded wallets are properly handled on appkit
+	ApiController.state.excludedRDNS = excludedRdns;
 
 	let client_metadata = {};
 	onMount(async () => {
