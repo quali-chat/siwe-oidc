@@ -74,7 +74,6 @@
 	});
 
 	modal.subscribeState(async (newState) => {
-		console.log(ApiController.state.excludedRDNS);
 		const account = getAccount(wagmiAdapter.wagmiConfig);
 
 		if (account.isConnected) {
