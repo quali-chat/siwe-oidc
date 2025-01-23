@@ -57,6 +57,9 @@ createAppKit({
   featuredWalletIds,
   enableCoinbase: false,
   allWallets: "HIDE",
+  themeVariables: {
+    "--w3m-font-family": "Nunito",
+  },
   siweConfig: createSIWEConfig({
     getMessageParams: () => ({
       domain: window.location.host,

@@ -1,12 +1,23 @@
-import { useAppKit } from "@reown/appkit/react";
+import { useAppKit, useAppKitAccount } from "@reown/appkit/react";
 import { useEffect } from "react";
 
 function App() {
   const { open } = useAppKit();
+  const { isConnected } = useAppKitAccount();
 
   useEffect(() => {
-    open();
-  }, []);
+    if (!isConnected) {
+      open();
+    }
+  }, [isConnected]);
+
+  const openModal = () => {
+    if (isConnected) {
+      open({ view: "SIWXSignMessage" });
+    } else {
+      open();
+    }
+  };
 
   return (
     <div className="bg-black bg-no-repeat bg-cover bg-center text-white flex-grow w-full h-screen flex flex-col items-center eclipse-background md:bg-cover md:bg-center md:bg-no-repeat">
@@ -31,13 +42,11 @@ function App() {
             src="img/ethereum.png"
             alt="Ethereum"
           />
-          <h1 className="text-3xl font-bold !text-[#FCA780]">
-            WELCOME
-          </h1>
+          <h1 className="text-3xl font-bold !text-[#FCA780]">WELCOME</h1>
           <div className="flex flex-col">
             <button
               className="h-10 w-64 rounded-[20px] bg-white text-black justify-evenly flex items-center self-center mt-8 mb-8"
-              onClick={open}
+              onClick={() => openModal()}
             >
               Sign-in with Ethereum
             </button>
