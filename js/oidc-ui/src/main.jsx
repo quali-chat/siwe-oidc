@@ -25,10 +25,8 @@ const metadata = {
   icons: ["https://avatars.githubusercontent.com/u/167457066?s=200&v=4"],
 };
 
-// 3. Set the networks
 const networks = [mainnet];
 
-// 4. Create Wagmi Adapter
 const wagmiAdapter = new WagmiAdapter({
   networks,
   projectId,
