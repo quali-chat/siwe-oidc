@@ -96,7 +96,7 @@
 
 				const preparedMessage = msgToSign.prepareMessage();
 
-				await new Promise((resolve) => setTimeout(resolve, 1000));
+				await new Promise((resolve) => setTimeout(resolve, 2000));
 
 				const signature = await signMessage(wagmiAdapter.wagmiConfig, {
 					message: preparedMessage,
