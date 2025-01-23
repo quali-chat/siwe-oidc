@@ -24,11 +24,10 @@
     "vite": "^6.0.2"
   },
   "dependencies": {
-    "@reown/appkit-adapter-wagmi": "^1.5.3",
-    "@wagmi/connectors": "^5.5.3",
-    "@wagmi/core": "^2.15.2",
+    "@reown/appkit-adapter-wagmi": "^1.6.4",
+    "@wagmi/core": "^2.16.3",
     "js-cookie": "^3.0.5",
     "siwe": "^2.3.2",
-    "viem": "2.21.53"
+    "viem": "2.22.11"
   }
 }
