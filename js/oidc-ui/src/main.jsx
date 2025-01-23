@@ -59,11 +59,11 @@ createAppKit({
   enableCoinbase: false,
   allWallets: "HIDE",
   siweConfig: createSIWEConfig({
-    getMessageParams: async () => ({
+    getMessageParams: () => ({
       domain: window.location.host,
       uri: window.location.origin,
-      chains: [1, 2020],
-      statement: "Please sign with your account",
+      chains: [1],
+      statement: `You are signing-in to ${window.location.host}.`,
     }),
     createMessage: ({ chainId }) => {
       expirationTime = new Date(
