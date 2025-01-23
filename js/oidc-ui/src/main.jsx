@@ -30,7 +30,6 @@ const networks = [mainnet];
 const wagmiAdapter = new WagmiAdapter({
   networks,
   projectId,
-  ssr: true,
 });
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -87,7 +86,8 @@ createAppKit({
       return messageToSign.prepareMessage();
     },
     getNonce: () => nonce,
-    verifyMessage: ({ message, signature }) => {
+    verifyMessage: async ({ message, signature }) => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       const session = {
         message: new SiweMessage(message),
         raw: messageToSign,
@@ -100,12 +100,13 @@ createAppKit({
 
       return true;
     },
-    onSignIn: () => {
-      window.location.replace(
-        `/sign_in?redirect_uri=${encodeURI(redirect)}&state=${encodeURI(
-          state
-        )}&client_id=${encodeURI(clientId)}${encodeURI(oidcNonceParam)}`
-      );
+    onSignIn: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      window.location.href = `/sign_in?redirect_uri=${encodeURI(
+        redirect
+      )}&state=${encodeURI(state)}&client_id=${encodeURI(clientId)}${encodeURI(
+        oidcNonceParam
+      )}`;
     },
   }),
 });
