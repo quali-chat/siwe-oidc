@@ -55,8 +55,8 @@ createAppKit({
     socials: false,
   },
   themeMode: "dark",
-  excludeWalletIds: "ALL",
   featuredWalletIds,
+  enableCoinbase: false,
   allWallets: "HIDE",
   siweConfig: createSIWEConfig({
     getMessageParams: async () => ({
