@@ -107,7 +107,7 @@ export const modal = createAppKit({
       return true;
     },
     onSignIn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       window.location.href = `/sign_in?redirect_uri=${encodeURI(
         redirect
