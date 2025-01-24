@@ -1,12 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createAppKit } from "@reown/appkit/react";
-import {
-  createSIWEConfig,
-  formatMessage,
-  getAddressFromMessage,
-  getChainIdFromMessage,
-} from "@reown/appkit-siwe";
+import { createSIWEConfig, formatMessage } from "@reown/appkit-siwe";
 import Cookies from "js-cookie";
 import { WagmiProvider } from "wagmi";
 import { mainnet } from "@reown/appkit/networks";
@@ -15,6 +10,7 @@ import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
 import "./index.css";
 import "@reown/appkit-wallet-button/react";
 import App from "./App.jsx";
+import { getAccount, reconnect } from "@wagmi/core";
 import { featuredWalletIds } from "./wallets.js";
 
 const queryClient = new QueryClient();
@@ -85,19 +81,20 @@ export const modal = createAppKit({
       return formatMessage(args, address);
     },
     getNonce: () => nonce,
-    verifyMessage: async ({ signature, message }) => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+    verifyMessage: async ({ signature }) => {
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const account = getAccount(wagmiAdapter.wagmiConfig);
 
       const session = {
         message: {
           domain: window.location.host,
-          address: getAddressFromMessage(message),
+          address: account.address,
           statement: `You are signing-in to ${window.location.host}.`,
           uri: window.location.origin,
           version: "1",
           nonce,
           expirationTime: expirationTime.toISOString(),
-          chainId: getChainIdFromMessage(message),
+          chainId: account.chainId,
           resources: [redirect],
         },
         signature,
@@ -110,7 +107,8 @@ export const modal = createAppKit({
       return true;
     },
     onSignIn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
       window.location.href = `/sign_in?redirect_uri=${encodeURI(
         redirect
       )}&state=${encodeURI(state)}&client_id=${encodeURI(clientId)}${encodeURI(
@@ -119,6 +117,8 @@ export const modal = createAppKit({
     },
   }),
 });
+
+reconnect(wagmiAdapter.wagmiConfig);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
