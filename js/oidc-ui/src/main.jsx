@@ -1,11 +1,14 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createAppKit } from "@reown/appkit/react";
-import { createSIWEConfig } from "@reown/appkit-siwe";
+import {
+  createSIWEConfig,
+  formatMessage,
+  getAddressFromMessage,
+  getChainIdFromMessage,
+} from "@reown/appkit-siwe";
 import Cookies from "js-cookie";
-import { getAccount } from "@wagmi/core";
 import { WagmiProvider } from "wagmi";
-import { SiweMessage } from "siwe";
 import { mainnet } from "@reown/appkit/networks";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
@@ -41,7 +44,7 @@ const oidcNonce = urlParams.get("oidc_nonce");
 const oidcNonceParam = `&oidc_nonce=${oidcNonce}`;
 
 let expirationTime = null;
-let messageToSign = null;
+let issuedAt = null;
 
 export const modal = createAppKit({
   adapters: [wagmiAdapter],
@@ -61,39 +64,42 @@ export const modal = createAppKit({
     "--w3m-font-family": "Nunito",
   },
   siweConfig: createSIWEConfig({
-    getMessageParams: () => ({
-      domain: window.location.host,
-      uri: window.location.origin,
-      chains: [1],
-      statement: `You are signing-in to ${window.location.host}.`,
-    }),
-    createMessage: ({ chainId }) => {
+    getMessageParams: async () => {
+      issuedAt = new Date().toISOString();
+
       expirationTime = new Date(
         new Date().getTime() + 2 * 24 * 60 * 60 * 1000 // 48h
       );
 
-      const account = getAccount(wagmiAdapter.wagmiConfig);
-
-      messageToSign = new SiweMessage({
+      return {
         domain: window.location.host,
-        address: account.address,
-        chainId,
-        expirationTime: expirationTime.toISOString(),
         uri: window.location.origin,
-        version: "1",
+        chains: [1],
+        exp: expirationTime.toISOString(),
+        iat: issuedAt,
         statement: `You are signing-in to ${window.location.host}.`,
-        nonce,
         resources: [redirect],
-      });
-
-      return messageToSign.prepareMessage();
+      };
+    },
+    createMessage: ({ address, ...args }) => {
+      return formatMessage(args, address);
     },
     getNonce: () => nonce,
-    verifyMessage: async ({ message, signature }) => {
+    verifyMessage: async ({ signature, message }) => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
+
       const session = {
-        message: new SiweMessage(message),
-        raw: messageToSign,
+        message: {
+          domain: window.location.host,
+          address: getAddressFromMessage(message),
+          statement: `You are signing-in to ${window.location.host}.`,
+          uri: window.location.origin,
+          version: "1",
+          nonce,
+          expirationTime: expirationTime.toISOString(),
+          chainId: getChainIdFromMessage(message),
+          resources: [redirect],
+        },
         signature,
       };
 
