@@ -43,7 +43,7 @@ const oidcNonceParam = `&oidc_nonce=${oidcNonce}`;
 let expirationTime = null;
 let messageToSign = null;
 
-createAppKit({
+export const modal = createAppKit({
   adapters: [wagmiAdapter],
   networks,
   projectId,

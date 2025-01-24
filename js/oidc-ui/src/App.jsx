@@ -1,23 +1,34 @@
-import { useAppKit, useAppKitAccount } from "@reown/appkit/react";
-import { useEffect } from "react";
+import { useAppKitAccount } from "@reown/appkit/react";
+import { modal } from "./main";
+import { useEffect, useState, useCallback } from "react";
 
 function App() {
-  const { open } = useAppKit();
   const { isConnected } = useAppKitAccount();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!isConnected) {
-      open();
+    modal.subscribeState((state) => {
+      setLoading(!state.initialized);
+    });
+  }, []);
+
+  const openModal = useCallback(() => {
+    if (modal.isOpen()) {
+      return;
+    }
+
+    if (isConnected) {
+      modal.open({ view: "SIWXSignMessage" });
+    } else {
+      modal.open();
     }
   }, [isConnected]);
 
-  const openModal = () => {
-    if (isConnected) {
-      open({ view: "SIWXSignMessage" });
-    } else {
-      open();
+  useEffect(() => {
+    if (!loading) {
+      openModal();
     }
-  };
+  }, [loading, openModal]);
 
   return (
     <div className="bg-black bg-no-repeat bg-cover bg-center text-white flex-grow w-full h-screen flex flex-col items-center eclipse-background md:bg-cover md:bg-center md:bg-no-repeat">

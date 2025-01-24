@@ -15,4 +15,5 @@
 
 body {
   @apply font-nunito;
+  background: #000000;
 }
