@@ -93,6 +93,7 @@ export const modal = createAppKit({
           uri: window.location.origin,
           version: "1",
           nonce,
+          issuedAt,
           expirationTime: expirationTime.toISOString(),
           chainId: account.chainId,
           resources: [redirect],
