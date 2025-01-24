@@ -47,7 +47,7 @@ function App() {
         </aside>
       </header>
       <div className="h-full flex items-center justify-center">
-        <div className="text-center bg-transparent flex flex-col px-12 py-6 md:w-[811px] max-w-[900px] h-[596px] md:border border-white md:bg-[#08090B] items-center justify-center">
+        <div className="text-center bg-transparent flex flex-col px-12 py-4 md:w-[811px] max-w-[900px] h-[596px] md:border border-white md:bg-[#08090B] items-center justify-center">
           <img
             className="self-center mb-8 max-w-[250px]"
             src="img/ethereum.png"
