@@ -10,7 +10,7 @@ import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
 import "./index.css";
 import "@reown/appkit-wallet-button/react";
 import App from "./App.jsx";
-import { getAccount, reconnect } from "@wagmi/core";
+import { getAccount } from "@wagmi/core";
 import { featuredWalletIds } from "./wallets.js";
 
 const queryClient = new QueryClient();
@@ -118,8 +118,6 @@ export const modal = createAppKit({
     },
   }),
 });
-
-reconnect(wagmiAdapter.wagmiConfig);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
