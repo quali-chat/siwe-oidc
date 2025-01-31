@@ -110,11 +110,11 @@ export const modal = createAppKit({
     onSignIn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      window.location.href = `/sign_in?redirect_uri=${encodeURI(
-        redirect
-      )}&state=${encodeURI(state)}&client_id=${encodeURI(clientId)}${encodeURI(
-        oidcNonceParam
-      )}`;
+      window.location.replace(
+        `/sign_in?redirect_uri=${encodeURI(redirect)}&state=${encodeURI(
+          state
+        )}&client_id=${encodeURI(clientId)}${encodeURI(oidcNonceParam)}`
+      );
     },
   }),
 });
