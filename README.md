@@ -39,7 +39,7 @@ wrangler publish
 
 The IdP currently only supports having the **frontend under the same subdomain as
 the API**. Here is the configuration for Cloudflare Pages:
-- `Build command`: `cd js/ui && npm install && npm run build`;
+- `Build command`: `cd js/oidc-ui && npm install && npm run build`;
 - `Build output directory`: `/static`; and
 - `Root directory`: `/`.
 And you will need to add some rules to do the routing between the Page and the
