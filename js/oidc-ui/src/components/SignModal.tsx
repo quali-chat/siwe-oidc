@@ -21,7 +21,7 @@ export const SignModal = ({ open, onClose, onSign }: ModalProps) => {
         className="flex items-center flex-col bg-black rounded-xl p-4 text-white max-w-[450px] m-4 sm:m-0 border border-white"
       >
         <img
-          src="images/quali.chat-mobile-logo.svg"
+          src="img/quali.chat-mobile-logo.svg"
           alt="Quali chat logo"
           className="mb-7"
         />
