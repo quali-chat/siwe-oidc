@@ -64,6 +64,8 @@ const App = () => {
       expires: expirationTime,
     });
 
+    setSignModalOpen(false);
+
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     window.location.href = `/sign_in?redirect_uri=${encodeURI(
@@ -87,12 +89,12 @@ const App = () => {
         <header className="flex flex-col items-center md:flex-row w-full">
           <aside className="pl-6 pt-6 pr-6 pb-2 flex">
             <img
-              src="images/quali.chat-desktop-logo.svg"
+              src="img/quali.chat-desktop-logo.svg"
               alt="Quali chat logo"
               className="icon self-center hidden sm:block"
             />
             <img
-              src="images/quali.chat-mobile-logo.svg"
+              src="img/quali.chat-mobile-logo.svg"
               alt="Quali chat logo"
               className="icon self-center block sm:hidden"
             />
@@ -102,7 +104,7 @@ const App = () => {
           <div className="rounded-xl text-center bg-transparent flex flex-col px-12 py-4 md:w-[811px] max-w-[900px] h-[596px] md:border border-white md:bg-[#08090B] items-center justify-center">
             <img
               className="self-center mb-8 max-w-[250px]"
-              src="images/ethereum.png"
+              src="img/ethereum.png"
               alt="Ethereum"
             />
             <h1 className="text-3xl font-bold text-[#FCA780]">WELCOME</h1>
