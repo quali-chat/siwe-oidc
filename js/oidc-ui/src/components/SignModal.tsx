@@ -13,7 +13,7 @@ export const SignModal = ({ open, onClose, onSign }: ModalProps) => {
     <div
       onClick={onClose}
       className="
-         fixed w-full h-full flex items-center justify-center bg-black/85
+         fixed w-full h-full flex items-center justify-center bg-black/85 z-10
         "
     >
       <div
