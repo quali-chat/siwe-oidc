@@ -21,9 +21,9 @@ ENV VITE_PROJECT_ID=$VITE_PROJECT_ID
 # if you are on mac or the image doesn't include python then uncomment the following line
 # RUN apk add --no-cache python3 make g++
 ADD --chown=node:node ./static /siwe-oidc/static
-ADD --chown=node:node ./js/ui /siwe-oidc/js/ui
-WORKDIR /siwe-oidc/js/ui
-COPY js/ui/.env ./.env
+ADD --chown=node:node ./js/oidc-ui /siwe-oidc/js/oidc-ui
+WORKDIR /siwe-oidc/js/oidc-ui
+COPY js/oidc-ui/.env ./.env
 RUN npm install
 RUN npm run build
 
