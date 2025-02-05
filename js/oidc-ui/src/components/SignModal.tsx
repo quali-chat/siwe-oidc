@@ -11,14 +11,13 @@ export const SignModal = ({ open, onClose, onSign }: ModalProps) => {
 
   return (
     <div
-      onClick={onClose}
       className="
-         fixed w-full h-full flex items-center justify-center bg-black/85 z-10
+         fixed w-full h-full flex items-center justify-center bg-[rgba(0,0,0,0.85)] z-10
         "
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="flex items-center flex-col bg-black rounded-xl p-4 text-white max-w-[450px] m-4 sm:m-0 border border-white"
+        className="flex items-center flex-col bg-black rounded-xl p-4 text-white max-w-[450px] m-4 sm:m-0 border border-solid border-white"
       >
         <img
           src="img/quali.chat-mobile-logo.svg"
