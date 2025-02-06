@@ -1,8 +1,4 @@
-import {
-  useAppKit,
-  useAppKitAccount,
-  useAppKitState,
-} from "@reown/appkit/react";
+import { AppKitConnectButton, useAppKitAccount } from "@reown/appkit/react";
 
 import { useDisconnect, useSignMessage } from "wagmi";
 import { SignModal } from "./components/SignModal";
@@ -10,7 +6,7 @@ import { type Address } from "viem";
 import Cookies from "js-cookie";
 
 import "./App.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SiweMessage } from "siwe";
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -26,8 +22,8 @@ const App = () => {
   const { disconnect } = useDisconnect();
   const { address, isConnected } = useAppKitAccount();
   const { signMessageAsync } = useSignMessage();
-  const { loading, initialized } = useAppKitState();
-  const { open } = useAppKit();
+
+  const ref = useRef<AppKitConnectButton>(null);
 
   useEffect(() => {
     if (isConnected) {
@@ -36,10 +32,26 @@ const App = () => {
   }, [isConnected]);
 
   useEffect(() => {
-    if (!loading && initialized && !isConnected) {
-      open();
+    if (ref.current && ref.current.shadowRoot) {
+      const wuiConnectButton =
+        ref.current.shadowRoot.querySelector("wui-connect-button");
+
+      if (wuiConnectButton) {
+        const button = wuiConnectButton.shadowRoot?.querySelector("button");
+
+        if (button) {
+          button.style.setProperty("height", "40px", "important");
+          button.style.setProperty("padding", "8px 32px", "important");
+
+          const wuiText = button.querySelector("wui-text");
+
+          if (wuiText) {
+            wuiText.style.setProperty("font-size", "16px", "important");
+          }
+        }
+      }
     }
-  }, [loading, initialized, isConnected]);
+  }, []);
 
   const onSign = async () => {
     const expirationTime = new Date(
@@ -96,7 +108,7 @@ const App = () => {
         onSign={() => onSign()}
         open={signModalOpen}
       />
-      <div className="bg-black bg-no-repeat bg-cover bg-center text-white flex-grow w-full h-screen flex flex-col items-center eclipse-background md:bg-cover md:bg-center md:bg-no-repeat">
+      <div className="text-white flex-grow w-full h-screen flex flex-col items-center">
         <header className="flex flex-col items-center md:flex-row w-full">
           <aside className="pl-6 pt-6 pr-6 pb-2 flex">
             <img
@@ -120,7 +132,12 @@ const App = () => {
             />
             <h1 className="text-3xl font-bold text-[#FCA780]">WELCOME</h1>
             <div className="mt-8 mb-8">
-              <appkit-connect-button size="md" label="Continue with Ethereum" />
+              <appkit-connect-button
+                size="md"
+                label="Continue with Ethereum"
+                // @ts-expect-error ref
+                ref={ref}
+              />
             </div>
             <div className="w-56 self-center text-center text-[14px] font-sans font-normal leading-normal">
               By using this service you agree to the&nbsp;
