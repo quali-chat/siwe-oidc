@@ -3,3 +3,11 @@
 body {
   background: #000000;
 }
+
+@theme {
+  --font-sans: "Nunito", "sans-serif";
+}
+
+wui-connect-button::part(button) {
+  height: 200px !important;
+}

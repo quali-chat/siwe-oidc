@@ -1,6 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
+import "@fontsource/nunito";
+import "@fontsource/nunito/700.css";
 import { CoreHelperUtil, createAppKit } from "@reown/appkit/react";
 
 import { WagmiProvider } from "wagmi";
@@ -39,6 +41,9 @@ createAppKit({
   featuredWalletIds,
   enableCoinbase: false,
   allWallets: "HIDE",
+  themeVariables: {
+    "--w3m-font-family": "'Nunito', 'sans-serif'",
+  },
 });
 
 createRoot(document.getElementById("root")!).render(

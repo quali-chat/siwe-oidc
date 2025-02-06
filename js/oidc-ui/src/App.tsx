@@ -1,7 +1,10 @@
-import { useAppKitAccount } from "@reown/appkit/react";
+import {
+  useAppKit,
+  useAppKitAccount,
+  useAppKitState,
+} from "@reown/appkit/react";
 
 import { useDisconnect, useSignMessage } from "wagmi";
-/* import { ConnectButton } from "./components/ConnectButton"; */
 import { SignModal } from "./components/SignModal";
 import { type Address } from "viem";
 import Cookies from "js-cookie";
@@ -23,12 +26,20 @@ const App = () => {
   const { disconnect } = useDisconnect();
   const { address, isConnected } = useAppKitAccount();
   const { signMessageAsync } = useSignMessage();
+  const { loading, initialized } = useAppKitState();
+  const { open } = useAppKit();
 
   useEffect(() => {
     if (isConnected) {
       setSignModalOpen(true);
     }
   }, [isConnected]);
+
+  useEffect(() => {
+    if (!loading && initialized && !isConnected) {
+      open();
+    }
+  }, [loading, initialized, isConnected]);
 
   const onSign = async () => {
     const expirationTime = new Date(
@@ -109,8 +120,7 @@ const App = () => {
             />
             <h1 className="text-3xl font-bold text-[#FCA780]">WELCOME</h1>
             <div className="mt-8 mb-8">
-              <appkit-connect-button size="md" label="Continue with Ethereum"/>
-              {/*  <ConnectButton className="mt-8 mb-8" /> */}
+              <appkit-connect-button size="md" label="Continue with Ethereum" />
             </div>
             <div className="w-56 self-center text-center text-[14px] font-sans font-normal leading-normal">
               By using this service you agree to the&nbsp;

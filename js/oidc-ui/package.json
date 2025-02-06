@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource/nunito": "5.1.1",
     "@reown/appkit": "1.6.5",
     "@reown/appkit-adapter-wagmi": "1.6.5",
     "@tailwindcss/vite": "4.0.3",
